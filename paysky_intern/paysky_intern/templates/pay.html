@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Payment</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f5f5f5;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+    }
+    p {
+      margin-bottom: 20px;
+      color: #555;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h1>Paymob Demo</h1>
+
+  <!-- زر يدخلك لـ old flow (/pay) -->
+  <a href="/pay"><button>Pay (old auth/order -> iframe)</button></a>
+
+  <hr>
+
+  <!-- فورم ينادي create-intention (POST) -->
+  <form action="/create-intention" method="post" id="intentForm">
+    <input type="hidden" name="amount" value="10000">
+    <button type="submit">Create Intention (new flow)</button>
+  </form>
+
+  <script>
+    // send JSON POST instead of form-encoded (fetch) for create-intention
+    document.getElementById('intentForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      fetch('/create-intention', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ amount: 10000 })
+      })
+      .then(r => r.json())
+      .then(json => {
+        if (json.checkout_url) {
+          window.location.href = json.checkout_url;
+        } else {
+          alert(JSON.stringify(json));
+        }
+      })
+      .catch(err => alert('Error: ' + err));
+    });
+  </script>
+</body>
+</html>
+
