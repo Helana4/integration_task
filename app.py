@@ -1,6 +1,6 @@
 
 from flask import Flask, render_template, redirect
-import paymob_checkout   # هنا هيبقى كود زميلك
+import paymob_checkout   
 
 app = Flask(__name__)
 
@@ -11,9 +11,9 @@ def home():
 @app.route("/pay")
 def pay():
     try:
-        # ننده على فانكشن زميلك
+    
         checkout_url = paymob_checkout.create_intention()
-        return redirect(checkout_url)  # يفتح صفحة الدفع
+        return redirect(checkout_url) 
     except Exception as e:
         return f"Error: {str(e)}"
 
